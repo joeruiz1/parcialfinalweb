@@ -6,9 +6,10 @@
 package controlador;
 
 import Dao.CrudColmena;
-import VO.RegistroMiel;
+import VO.Colmena;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -19,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author fernando stiven
  */
-public class ControlMiel extends HttpServlet {
+public class ListarColmena extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,10 +34,7 @@ public class ControlMiel extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            
-        }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -51,37 +49,36 @@ public class ControlMiel extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
-    }
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-     boolean resultado = false;
-        String fecha = request.getParameter("fecha");
-        String recolector = request.getParameter("recolector");
-        String idColmena = request.getParameter("idColmena");
-        String KilosMiel = request.getParameter("KilosMiel");
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            RequestDispatcher rq = request.getRequestDispatcher("ListarColmena.jsp");
 
-        int id_colmena = Integer.parseInt(idColmena);
-        int K_colmena =Integer.parseInt(KilosMiel);
+            CrudColmena cru = new CrudColmena();
 
-        if (KilosMiel.trim().length() > 0  ) {
-            resultado = true;
-            RegistroMiel m=new RegistroMiel(fecha,recolector,id_colmena,K_colmena);
-            CrudColmena c=new CrudColmena();
-            c.agregarColmena(m);
-         
-            RequestDispatcher rq = request.getRequestDispatcher("index.jsp");
-            if (resultado == true) {
-                request.setAttribute("resultado", true);
+            ArrayList<Colmena> lis = null;
+            lis = (ArrayList<Colmena>) cru.listarColmena();
+            if (lis.size() > 0) {
+
+                request.setAttribute("lis", lis);
             } else {
-                request.setAttribute("resultado", false);
+                request.setAttribute("lis", null);
             }
             rq.forward(request, response);
         }
+
     }
 
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
     @Override
     public String getServletInfo() {
         return "Short description";

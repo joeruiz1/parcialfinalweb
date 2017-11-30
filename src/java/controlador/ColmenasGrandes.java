@@ -6,9 +6,11 @@
 package controlador;
 
 import Dao.CrudColmena;
+import VO.Colmena;
 import VO.RegistroMiel;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -19,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author fernando stiven
  */
-public class ControlMiel extends HttpServlet {
+public class ColmenasGrandes extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,7 +36,6 @@ public class ControlMiel extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
             
         }
     }
@@ -51,37 +52,43 @@ public class ControlMiel extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+                response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            RequestDispatcher rq = request.getRequestDispatcher("KilosMiel.jsp");
+
+            CrudColmena cru = new CrudColmena();
+
+            ArrayList<RegistroMiel> lis = null;
+            lis = (ArrayList<RegistroMiel>) cru.OtroRequerimiento();
+            if (lis.size() > 0) {
+                request.setAttribute("lis", lis);
+            } else {
+                request.setAttribute("lis", null);
+            }
         processRequest(request, response);
     }
+    }
+
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-     boolean resultado = false;
-        String fecha = request.getParameter("fecha");
-        String recolector = request.getParameter("recolector");
-        String idColmena = request.getParameter("idColmena");
-        String KilosMiel = request.getParameter("KilosMiel");
-
-        int id_colmena = Integer.parseInt(idColmena);
-        int K_colmena =Integer.parseInt(KilosMiel);
-
-        if (KilosMiel.trim().length() > 0  ) {
-            resultado = true;
-            RegistroMiel m=new RegistroMiel(fecha,recolector,id_colmena,K_colmena);
-            CrudColmena c=new CrudColmena();
-            c.agregarColmena(m);
-         
-            RequestDispatcher rq = request.getRequestDispatcher("index.jsp");
-            if (resultado == true) {
-                request.setAttribute("resultado", true);
-            } else {
-                request.setAttribute("resultado", false);
-            }
-            rq.forward(request, response);
-        }
+        processRequest(request, response);
     }
 
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
     @Override
     public String getServletInfo() {
         return "Short description";

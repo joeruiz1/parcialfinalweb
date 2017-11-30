@@ -10,10 +10,11 @@ package VO;
  * @author fernando stiven
  */
 public class RegistroMiel {
-   private   String fecha ; 
+   private   String fecha; 
 private String recolector;
-private int idColmena  ;
-private int KilosMiel  ;
+private int idColmena ;
+private int KilosMiel ;
+private int Total ;
 
     public RegistroMiel(String fecha, String recolector, int idColmena, int KilosMiel) {
         this.fecha = fecha;
@@ -55,6 +56,14 @@ private int KilosMiel  ;
 
     public void setKilosMiel(int KilosMiel) {
         this.KilosMiel = KilosMiel;
+    }
+
+    public int getTotal() {
+        return Total;
+    }
+
+    public void setTotal(int Total) {
+        this.Total = Total;
     }
 
 
